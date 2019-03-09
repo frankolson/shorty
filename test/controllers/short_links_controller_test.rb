@@ -27,8 +27,14 @@ class ShortLinksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should redirect short_link' do
+    # API redirect
     get shortened_url(@short_link.short_code), as: :json
+    assert_response :moved_permanently
+    assert_redirected_to @short_link.long_url
 
+    # HTML redirect
+    get shortened_url(@short_link.short_code)
+    assert_response :moved_permanently
     assert_redirected_to @short_link.long_url
   end
 

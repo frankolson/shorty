@@ -4,7 +4,7 @@ class ShortLinksController < ApplicationController
     @short_link = ShortLink.find_by short_code: params[:short_code]
 
     if @short_link.present?
-      redirect_to @short_link.long_url
+      redirect_to @short_link.long_url, status: :moved_permanently
     else
       render json: { errors: 'URL not found' }, status: :not_found
     end
