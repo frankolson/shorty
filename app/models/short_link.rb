@@ -1,4 +1,6 @@
 class ShortLink < ApplicationRecord
+  has_many :visits, dependent: :destroy
+
   validates :long_url, uniqueness: true, presence: true
   validates :short_code, uniqueness: true, presence: true
 
@@ -13,5 +15,9 @@ class ShortLink < ApplicationRecord
       code = SecureRandom.hex(4)
       break code unless ShortLink.exists?(short_code: code)
     end
+  end
+
+  def mark_visit
+    visits.create referrer: Current.referrer, user_agent: Current.user_agent
   end
 end

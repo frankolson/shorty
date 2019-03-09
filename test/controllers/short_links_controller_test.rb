@@ -44,4 +44,12 @@ class ShortLinksControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
     assert_equal 'URL not found', response.parsed_body['errors']
   end
+
+  test 'should track show visits' do
+    assert_difference('Visit.count') do
+      get shortened_url(@short_link.short_code), as: :json
+    end
+
+    assert_response :moved_permanently
+  end
 end
