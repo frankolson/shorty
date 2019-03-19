@@ -13,8 +13,7 @@ class ShortLinksController < ApplicationController
 
   # POST /short_links
   def create
-    @short_link = ShortLink.find_or_initialize_by \
-      long_url: short_link_params['long_url']
+    create_short_link
 
     if @short_link.save
       render status: :created
@@ -24,6 +23,22 @@ class ShortLinksController < ApplicationController
   end
 
   private
+    def create_short_link
+      @short_link = ShortLink.find_or_initialize_by \
+        long_url: short_link_params['long_url'], company: user.company
+
+      byebug
+      set_short_link_user
+    end
+    
+    def user
+      @user ||= User.find short_link_params['user_id']
+    end
+
+    def set_short_link_user
+      @short_link.user = user unless @short_link.user&.persisted?
+    end
+
     def short_link_params
       JSON.parse(request.body.read)
     end

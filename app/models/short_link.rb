@@ -1,4 +1,7 @@
 class ShortLink < ApplicationRecord
+  belongs_to :user, dependent: :destroy
+  has_one :company, through: :user
+
   has_many :visits, dependent: :destroy
 
   validates :long_url, uniqueness: true, presence: true
