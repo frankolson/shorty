@@ -27,7 +27,6 @@ class ShortLinksController < ApplicationController
       @short_link = ShortLink.find_or_initialize_by \
         long_url: short_link_params['long_url'], company: user.company
 
-      byebug
       set_short_link_user
     end
     
