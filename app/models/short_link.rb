@@ -1,10 +1,10 @@
 class ShortLink < ApplicationRecord
-  belongs_to :user, dependent: :destroy
-  has_one :company, through: :user
+  belongs_to :user
+  belongs_to :company
 
   has_many :visits, dependent: :destroy
 
-  validates :long_url, uniqueness: true, presence: true
+  validates :long_url, uniqueness: { scope: :company_id }, presence: true
   validates :short_code, uniqueness: true, presence: true
 
   before_validation :assign_short_code, on: :create
