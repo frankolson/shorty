@@ -31,11 +31,12 @@ class ShortLinksControllerTest < ActionDispatch::IntegrationTest
   test 'should not create company scoped duplicate short_links' do
     assert_no_difference('ShortLink.count') do
       post short_link_url, as: :json,
-        params: { long_url: @short_link.long_url, user_id: users(:ian).id }
+        params: { long_url: @short_link.long_url, user_id: users(:aaron).id }
     end
 
     assert_response :created
     assert_equal @short_link.long_url, response.parsed_body['long_url']
+    assert_equal @short_link.user.username, response.parsed_body['created_by']
     assert_equal shortened_url(@short_link.short_code),
       response.parsed_body['short_link']
   end

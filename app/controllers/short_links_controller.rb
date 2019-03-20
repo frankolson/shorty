@@ -24,6 +24,7 @@ class ShortLinksController < ApplicationController
 
   private
     def short_link_params
-      params.permit(:long_url, :user_id)
+      @short_link_params ||= JSON.parse(request.body.read).
+        with_indifferent_access.slice(:long_url, :user_id)
     end
 end

@@ -3,9 +3,6 @@ class ShortLink::CreationForm
 
   attr_accessor :user_id, :long_url
 
-  delegate :company, to: :short_link
-  delegate :short_code, to: :short_link
-  
   validate :valid_short_link?
 
   def submit
@@ -13,8 +10,9 @@ class ShortLink::CreationForm
     short_link.save if valid?
   end
 
-  def user
-    @user ||= User.find user_id
+  def short_link
+    @short_link ||= ShortLink.find_or_initialize_by long_url: long_url,
+      company: user.company
   end
 
   private
@@ -24,9 +22,8 @@ class ShortLink::CreationForm
       end
     end
 
-    def short_link
-      @short_link ||= ShortLink.find_or_initialize_by long_url: long_url,
-        company: user.company
+    def user
+      @user ||= User.find user_id
     end
 
     def set_short_link_user
