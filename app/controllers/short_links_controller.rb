@@ -13,32 +13,17 @@ class ShortLinksController < ApplicationController
 
   # POST /short_links
   def create
-    create_short_link
+    @short_link_form = ShortLink::CreationForm.new short_link_params
 
-    if @short_link.save
+    if @short_link_form.submit
       render status: :created
     else
-      render json: { errors: @short_link.errors }, status: :unprocessable_entity
+      render json: { errors: @short_link_form.errors }, status: :unprocessable_entity
     end
   end
 
   private
-    def create_short_link
-      @short_link = ShortLink.find_or_initialize_by \
-        long_url: short_link_params['long_url'], company: user.company
-
-      set_short_link_user
-    end
-    
-    def user
-      @user ||= User.find short_link_params['user_id']
-    end
-
-    def set_short_link_user
-      @short_link.user = user unless @short_link.user&.persisted?
-    end
-
     def short_link_params
-      JSON.parse(request.body.read)
+      params.permit(:long_url, :user_id)
     end
 end

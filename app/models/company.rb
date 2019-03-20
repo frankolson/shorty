@@ -1,4 +1,4 @@
 class Company < ApplicationRecord
-  has_many :users
-  has_many :short_links, through: :users
+  has_many :users, dependent: :destroy
+  has_many :short_links, dependent: :destroy
 end
